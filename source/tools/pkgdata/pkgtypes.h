@@ -140,6 +140,8 @@ char * convertToNativePathSeparators(char *path);
 # ifndef UDATA_SO_SUFFIX
 #  define UDATA_SO_SUFFIX ".dll"
 # endif
+#endif
+#ifdef WINDOWS_WITH_MSVC
 # define LIB_PREFIX ""
 # define LIB_STATIC_PREFIX ""
 # define OBJ_SUFFIX ".obj"

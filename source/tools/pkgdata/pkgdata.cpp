@@ -923,21 +923,9 @@ static void createFileNames(UPKGOptions *o, const char mode, const char *version
     const char* FILE_EXTENSION_SEP = uprv_strlen(pkgDataFlags[SO_EXT]) == 0 ? "" : ".";
     const char* FILE_SUFFIX = pkgDataFlags[LIB_EXT_ORDER][0] == '.' ? "." : "";
 
-#if U_PLATFORM == U_PF_MINGW
-        /* MinGW does not need the library prefix when building in dll mode. */
-        if (IN_DLL_MODE(mode)) {
-            sprintf(libFileNames[LIB_FILE], "%s", libName);
-        } else {
-            sprintf(libFileNames[LIB_FILE], "%s%s%s",
-                    (strstr(libName, "icudt") ? "lib" : ""),
-                    pkgDataFlags[LIBPREFIX],
-                    libName);
-        }
-#else
         sprintf(libFileNames[LIB_FILE], "%s%s",
                 pkgDataFlags[LIBPREFIX],
                 libName);
-#endif
 
         if(o->verbose) {
           fprintf(stdout, "# libFileName[LIB_FILE] = %s\n", libFileNames[LIB_FILE]);
@@ -1424,6 +1412,18 @@ static int32_t pkg_generateLibraryFile(const char *targetDir, const char mode, c
             freeCmd = true;
         }
 #if U_PLATFORM == U_PF_MINGW
+        fprintf(stderr, "genlib=%s targetdir=%s libfilenames=%s -o pkgdataflags=%s targetdir=%s libfilenames=%s objectfileandeverythingelse=%s %s%s %s %s",
+                pkgDataFlags[GENLIB],
+                targetDir,
+                libFileNames[LIB_FILE_MINGW],
+                pkgDataFlags[LDICUDTFLAGS],
+                targetDir,
+                libFileNames[LIB_FILE_VERSION_TMP],
+                objectFile,
+                pkgDataFlags[LD_SONAME],
+                pkgDataFlags[LD_SONAME][0] == 0 ? "" : libFileNames[LIB_FILE_VERSION_MAJOR],
+                pkgDataFlags[RPATH_FLAGS],
+                pkgDataFlags[BIR_FLAGS]);
         sprintf(cmd, "%s%s%s %s -o %s%s %s %s%s %s %s",
                 pkgDataFlags[GENLIB],
                 targetDir,
