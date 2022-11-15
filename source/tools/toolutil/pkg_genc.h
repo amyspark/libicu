@@ -17,7 +17,7 @@
 
 /*** Platform #defines move here ***/
 #if U_PLATFORM_HAS_WIN32_API
-#ifdef __GNUC__
+#if defined(__GNUC__) || defined(__clang__)
 #define WINDOWS_WITH_GNUC
 #else
 #define WINDOWS_WITH_MSVC
