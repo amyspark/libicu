@@ -48,7 +48,7 @@
  * the data to generate the final data library. This can
  * increase the performance of the pkdata tool.
  */
-#if U_PLATFORM == U_PF_OS400
+#if U_PLATFORM == U_PF_OS400 || U_PLATFORM_HAS_WIN32_API
 #define USE_SINGLE_CCODE_FILE
 #endif
 
@@ -78,6 +78,7 @@ U_CAPI void U_EXPORT2
 writeCCode(
     const char *filename,
     const char *destdir,
+    const char *optEntryPoint,
     const char *optName,
     const char *optFilename,
     char *outFilePath,

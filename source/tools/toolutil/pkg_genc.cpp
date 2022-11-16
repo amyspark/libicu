@@ -390,6 +390,7 @@ U_CAPI void U_EXPORT2
 writeCCode(
         const char *filename,
         const char *destdir,
+        const char *optEntryPoint,
         const char *optName,
         const char *optFilename,
         char *outFilePath,
@@ -433,6 +434,18 @@ writeCCode(
             exit(U_ILLEGAL_ARGUMENT_ERROR);
         }
         uprv_strcpy(outFilePath, buffer);
+    }
+
+    if(optEntryPoint != NULL) {
+        uprv_strcpy(entry, optEntryPoint);
+        uprv_strcat(entry, "_dat");
+    }
+    /* turn dashes in the entry name into underscores */
+    length=uprv_strlen(entry);
+    for(i=0; i<length; ++i) {
+        if(entry[length+i]=='-') {
+            entry[length+i]='_';
+        }
     }
 
     out=T_FileStream_open(buffer, "w");
