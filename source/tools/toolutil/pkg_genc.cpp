@@ -228,6 +228,16 @@ static const struct AssemblyType {
     },
 /* align 16 bytes */
 /*  http://msdn.microsoft.com/en-us/library/dwa9fwef.aspx */
+    {"nasm",
+        "global %s\n"
+#if defined(_WIN32)
+        "section .rdata align=16\n"
+#else
+        "section .rodata align=16\n"
+#endif
+        "%s:\n",
+        "  dd ","",HEX_0X
+    },
 #if defined(_WIN64)
     { "masm",
       "\tTITLE %s\n"
@@ -306,6 +316,17 @@ writeAssemblyCode(
         exit(U_FILE_ACCESS_ERROR);
     }
 
+    const char* newSuffix = nullptr;
+
+    if (uprv_strcmp(assemblyHeader[assemblyHeaderIndex].name, "masm") == 0) {
+        newSuffix = ".masm";
+    }
+    else if (uprv_strcmp(assemblyHeader[assemblyHeaderIndex].name, "nasm") == 0) {
+        newSuffix = ".asm";
+    } else {
+        newSuffix = ".S";
+    }
+
     getOutFilename(
         filename,
         destdir,
@@ -313,7 +334,7 @@ writeAssemblyCode(
         sizeof(buffer.chars),
         entry,
         sizeof(entry),
-        ".S",
+        newSuffix,
         optFilename);
     out=T_FileStream_open(buffer.chars, "w");
     if(out==NULL) {
