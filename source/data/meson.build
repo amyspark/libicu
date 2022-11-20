@@ -45,6 +45,11 @@ icudata_asm = custom_target(
 
 sources = [icudata_asm]
 
+# Work around Meson bug -- https://github.com/mesonbuild/meson/issues/11083
+if cpp.get_argument_syntax() == 'msvc'
+  sources += files('dummy.c')
+endif
+
 python_exe = import('python').find_installation('python3')
 
 icudata_exports = custom_target(
