@@ -68,21 +68,19 @@ if host_machine.system() == 'windows'
   )
 endif
 
-if cpp.get_id() != 'msvc'
-  icudata = library(
-    icudata_name,
-    sources,
-    include_directories: incdir,
-    version: U_ICU_VERSION,
-    vs_module_defs: icudata_exports,
-    install: true,
-  )
+icudata = library(
+  icudata_name,
+  sources,
+  include_directories: incdir,
+  version: U_ICU_VERSION,
+  vs_module_defs: icudata_exports,
+  install: true,
+)
 
-  icudata_dep = declare_dependency(
-    compile_args: usage_args,
-  )
+icudata_dep = declare_dependency(
+  compile_args: usage_args,
+)
 
-  if meson.version().version_compare('>=0.54.0')
-    meson.override_dependency('icu-data', icudata_dep)
-  endif
+if meson.version().version_compare('>=0.54.0')
+  meson.override_dependency('icu-data', icudata_dep)
 endif
